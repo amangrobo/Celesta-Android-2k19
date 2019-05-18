@@ -1,6 +1,7 @@
 package in.org.celesta.iitp.home;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,10 +20,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.navigation.NavigationView;
 
 import in.org.celesta.iitp.R;
-import in.org.celesta.iitp.events.EventsFragment;
-import in.org.celesta.iitp.events.EventsRecyclerAdapter;
+import in.org.celesta.iitp.events.EventsActivity;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnItemSelectedListener, EventsRecyclerAdapter.OnFeedSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnItemSelectedListener, EventCategoryFragment.OnEventCategorySelectedListener {
 
     FrameLayout frameLayout;
 
@@ -106,18 +106,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onItemSelected(View view, Fragment newFragment) {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_frame_layout, new EventsFragment());
+        fragmentTransaction.replace(R.id.main_frame_layout, new EventCategoryFragment());
         fragmentTransaction.addToBackStack("later_fragment");
         fragmentTransaction.commit();
 
-        Animator animator = ViewAnimationUtils.createCircularReveal(frameLayout, (int)view.getX(), (int)view.getY(), 0, 2000f);
+        Animator animator = ViewAnimationUtils.createCircularReveal(frameLayout, 500, 800, 0, 1500f);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.setDuration(1500);
+        animator.setDuration(800);
         animator.start();
     }
 
     @Override
-    public void onFeedSelected(String id, View view, int position) {
-
+    public void onEventCategorySelected(int category) {
+        Intent intent = new Intent(MainActivity.this, EventsActivity.class);
+        intent.putExtra("category", category);
+        startActivity(intent);
     }
 }
